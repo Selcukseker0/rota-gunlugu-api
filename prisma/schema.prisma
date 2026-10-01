@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  displayName String?
+  createdAt   DateTime @default(now())
+  routes      Route[]
+}
+
+model Route {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  clientUuid      String   @unique
+  durationSeconds Int
+  distanceMeters  Float
+  visibility      String   @default("private")
+  startedAt       DateTime
+  syncedAt        DateTime @default(now())
+  points          Json
+}
